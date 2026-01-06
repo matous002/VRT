@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 	<meta charset="UTF-8">
-	<title>Vysokorychlostní trať – detail</title>
+	<title>VRT - ceny</title>
 	<link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
@@ -11,8 +11,7 @@
 		<div class="inner">
 			<h1>Jízdenky a ceny</h1>
 			<p>
-				Vysokorychlostní trať (VRT) přinese zásadní zrychlení dopravy mezi
-				největšími městy v České republice a propojení se zahraničními sítěmi.
+			Ceny jízdného jsou stanoveny na základě vzdálenosti a zvolené cestovní třídy. Transparentní tarifní systém umožňuje cestujícím snadno odhadnout cenu jízdy a zvolit úroveň komfortu odpovídající jejich potřebám.
 			</p>
 
 			<h2>1. Třída</h2>
@@ -20,18 +19,18 @@
 			<table>
 				<thead>
 					<tr>
-						<th>Parametr</th>
+						<th> 			</th>
 						<th>Cena</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>Maximální rychlost</td>
-						<td>320 km/h</td>
+						<td>1 km</td>
+						<td>7kč</td>
 					</tr>
 					<tr>
-						<td>Délka úseku</td>
-						<td>cca 120 km</td>
+						<td>W</td>
+						<td>Zdarma</td>
 					</tr>
 					<tr>
 						<td>Provoz</td>
@@ -50,14 +49,14 @@
     <table>
       <thead>
         <tr>
-          <th>Parametr</th>
+          <th> 			</th>
           <th>Cena</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Maximální rychlost</td>
-          <td>320 km/h</td>
+          <td>1 km</td>
+          <td>4 kč</td>
         </tr>
         <tr>
           <td>Délka úseku</td>
@@ -76,9 +75,132 @@
 
     <br>
 			</div>
-    <a href="index.html" class="button">Zpět</a>
 	</section>
 
+<section class="lllr align-center">
+<h2>Cenová kalkulačka</h2>
+	</section>
+
+
+	<section class="price-calculator">
+
+
+	    <label>
+	        Odkud:
+	        <select id="from"></select>
+	    </label>
+
+	    <label>
+	        Kam:
+	        <select id="to"></select>
+	    </label>
+
+	    <label>
+	        Třída:
+	        <select id="class">
+	            <option value="2">2. třída</option>
+	            <option value="1">1. třída</option>
+	        </select>
+	    </label>
+
+	<section class="wsssssssraw align-center">
+	    <button onclick="calculatePrice()">Spočítat cenu</button>
+<section>
+
+	    <p id="result"></p>
+	</section>
+
+
+	<script>
+// ceny za km
+const pricePerKm = {
+    1: 7,
+    2: 4
+};
+
+// vzdálenosti (km)
+const routes = {
+    // 🔵 MODRÁ TRASA
+    "Mnichov-Plzeň": 300,
+    "Mnichov-Praha": 390,
+    "Mnichov-Brno": 600,
+    "Mnichov-Ostrava": 770,
+
+    "Plzeň-Praha": 90,
+    "Plzeň-Brno": 300,
+    "Plzeň-Ostrava": 470,
+
+    "Praha-Brno": 210,
+    "Praha-Ostrava": 380,
+
+    "Brno-Ostrava": 170,
+
+    // 🔴 ČERVENÁ TRASA
+    "Drážďany-Praha": 150,
+    "Drážďany-Brno": 360,
+    "Drážďany-Břeclav": 450,
+    "Drážďany-Vídeň": 530,
+    "Drážďany-Bratislava": 540,
+
+    "Praha-Břeclav": 300,
+    "Praha-Vídeň": 380,
+    "Praha-Bratislava": 390,
+
+    "Brno-Břeclav": 90,
+    "Brno-Vídeň": 170,
+    "Brno-Bratislava": 180,
+
+    "Břeclav-Vídeň": 80,
+    "Břeclav-Bratislava": 90
+};
+
+// unikátní města
+const cities = [...new Set(
+    Object.keys(routes).flatMap(r => r.split("-"))
+)];
+
+// naplnění selectů
+const fromSelect = document.getElementById("from");
+const toSelect = document.getElementById("to");
+
+cities.forEach(city => {
+    fromSelect.innerHTML += `<option value="${city}">${city}</option>`;
+    toSelect.innerHTML += `<option value="${city}">${city}</option>`;
+});
+
+// výpočet
+function calculatePrice() {
+    const from = fromSelect.value;
+    const to = toSelect.value;
+    const travelClass = document.getElementById("class").value;
+
+    if (from === to) {
+        result.innerText = "Vyberte dvě různá města.";
+        return;
+    }
+
+    const key1 = `${from}-${to}`;
+    const key2 = `${to}-${from}`;
+
+    const distance = routes[key1] || routes[key2];
+
+    if (!distance) {
+        result.innerText = "Tato trasa zatím není v systému.";
+        return;
+    }
+
+    const price = distance * pricePerKm[travelClass];
+
+    result.innerHTML = `
+        Vzdálenost: <strong>${distance} km</strong><br>
+        Cena (${travelClass}. třída): <strong>${price} Kč</strong>
+    `;
+}
+</script>
+
+	<section class="wraw align-center">
+<a href="index.html" class="button">Zpět</a>
+<section>
 
 
 </body>
